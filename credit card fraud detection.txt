@@ -1,0 +1,40 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import confusion_matrix
+from sklearn.linear_model import LogisticRegression
+
+LABELS = ["Normal", "Fraud"]
+#uploading the dataset
+dataset = pd.read_csv("creditcard.csv")
+dataset.head()
+
+dataset.isnull().sum()
+
+frauds =  dataset[dataset.Class==0].values
+normal =  dataset[dataset.Class==1].values
+
+print(frauds.shape)
+print(normal.shape)
+
+x=dataset.drop(columns='Class',axis=1)
+y=dataset['Class']
+#splitting the dataset
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=42)
+print(x.shape,x_train.shape, x_test.shape)
+
+model=LogisticRegression()
+model.fit(x_train,y_train)
+ypred=model.predict(x_test)
+#finding accuracy
+acc=accuracy_score(ypred, y_test)
+print("Accuracy is",acc)
+
+print("")
+
+mat=confusion_matrix(y_test,ypred)
+print("confusion matrix")
+print(mat)
